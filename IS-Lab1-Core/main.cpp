@@ -5,7 +5,6 @@
 #include <windowsx.h>
 #include <CommCtrl.h>
 #include <commdlg.h>
-#include <cstdio> // delete?
 #include <cstring>
 #include <tchar.h>
 #include <thread>
@@ -80,8 +79,8 @@ LRESULT CALLBACK WndProcFunc(
 	{
 	case WM_CREATE:
 		hWndEditFName = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL, 
-			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_LOWERCASE | ES_READONLY | ES_AUTOHSCROLL, 10, 10, 300, 25, 
-			hWnd, (HMENU)ID_EDIT_FILENAME, 
+			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_READONLY | ES_AUTOHSCROLL, 
+			10, 10, 300, 25, hWnd, (HMENU)ID_EDIT_FILENAME, 
 			(HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
 
 		if (hWndEditFName == 0) {
@@ -102,6 +101,9 @@ LRESULT CALLBACK WndProcFunc(
 		case ID_BUTTON_OPENFILE: 
 			if (FOpenDialogExecute(hWnd, hashingFile)) {
 				SendMessage(hWndEditFName, WM_SETTEXT, 0, (LPARAM)hashingFile);
+			}
+			else {
+				SendMessage(hWndEditFName, WM_SETTEXT, 0, (LPARAM) L"");
 			}
 			break;
 		}
@@ -124,7 +126,7 @@ BOOL FOpenDialogExecute(HWND hWndOwner, LPWSTR fName) {
 	ofn.lpstrFile = fName;
 	ofn.lpstrFile[0] = L'\0';
 	ofn.nMaxFile = FILENAME_MAX;
-	ofn.lpstrFilter = L"Все файлы\0*.*";
+	ofn.lpstrFilter = L"Все файлы\0*.*\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_DONTADDTORECENT | OFN_FORCESHOWHIDDEN | OFN_NONETWORKBUTTON;
