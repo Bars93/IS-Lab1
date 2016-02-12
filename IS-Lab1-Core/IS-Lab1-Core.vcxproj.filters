@@ -26,5 +26,8 @@
     <ClInclude Include="hash_md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ctrldefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
