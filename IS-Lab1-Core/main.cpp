@@ -48,7 +48,7 @@ int WINAPI WinMain(
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
 
 	if (!RegisterClassEx(&wcex)) {
-		MessageBox(NULL, L"Ошибка в регистрации класса окна!", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, L"РћС€РёР±РєР° РІ СЂРµРіРёСЃС‚СЂР°С†РёРё РєР»Р°СЃСЃР° РѕРєРЅР°!", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
 
@@ -87,7 +87,7 @@ LRESULT CALLBACK WndProcFunc(
 			uiLeftOffset, uiTopOffset, rct.right / 2, uiHeight, hWnd, (HMENU)ID_EDIT_FILENAME, 
 			(HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
 		if (hWndEditFName == 0) {
-			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(hWnd, L"РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё СЌР»РµРјРµРЅС‚Р°", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
 		hWndEditMLResult = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL,
@@ -96,21 +96,21 @@ LRESULT CALLBACK WndProcFunc(
 			uiLeftOffset, uiTopOffset + uiHeightJump, rct.right - 10, uiHeight * 3, hWnd, (HMENU)ID_EDIT_ML_RESULT,
 			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
 		if (hWndEditMLResult == 0) {
-			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(hWnd, L"РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё СЌР»РµРјРµРЅС‚Р°", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
-		hWndBtnOFile = CreateWindowEx(0, L"BUTTON", L"Выбрать файл",
+		hWndBtnOFile = CreateWindowEx(0, L"BUTTON", L"Р’С‹Р±СЂР°С‚СЊ С„Р°Р№Р»",
 			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, uiLeftOffset + rct.right / 2 + uiSpace, uiTopOffset, uiBtnWidth, uiHeight, hWnd,
 			(HMENU)ID_BUTTON_OPENFILE, (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
 		if (hWndBtnOFile == 0) {
-			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(hWnd, L"РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё СЌР»РµРјРµРЅС‚Р°", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
-		hWndBtnCalcHash = CreateWindowEx(0, L"BUTTON", L"Вычислить MD5",
+		hWndBtnCalcHash = CreateWindowEx(0, L"BUTTON", L"Р’С‹С‡РёСЃР»РёС‚СЊ MD5",
 			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, uiLeftOffset + rct.right / 2 + 2 * uiSpace + uiBtnWidth, uiTopOffset, uiBtnWidth, uiHeight, hWnd,
 			(HMENU)ID_BUTTON_CALCHASH, (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
 		if (hWndBtnCalcHash == 0) {
-			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(hWnd, L"РћС€РёР±РєР° РїСЂРё СЃРѕР·РґР°РЅРёРё СЌР»РµРјРµРЅС‚Р°", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
 		break;
@@ -147,11 +147,11 @@ BOOL FOpenDialogExecute(HWND hWndOwner, LPWSTR fName) {
 	ofn.lpstrFile = fName;
 	ofn.lpstrFile[0] = L'\0';
 	ofn.nMaxFile = FILENAME_MAX;
-	ofn.lpstrFilter = L"Все файлы\0*.*\0";
+	ofn.lpstrFilter = L"Р’СЃРµ С„Р°Р№Р»С‹\0*.*\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_DONTADDTORECENT | OFN_FORCESHOWHIDDEN | OFN_NONETWORKBUTTON;
-	ofn.lpstrFileTitle = L"Открыть файл, для получения хеш-функции...";
+	ofn.lpstrFileTitle = L"РћС‚РєСЂС‹С‚СЊ С„Р°Р№Р», РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ С…РµС€-С„СѓРЅРєС†РёРё...";
 	if (GetOpenFileName(&ofn) == TRUE) {
 		return TRUE;
 	}
