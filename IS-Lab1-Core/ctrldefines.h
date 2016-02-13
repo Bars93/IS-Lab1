@@ -1,3 +1,5 @@
 #pragma once
 #define ID_EDIT_FILENAME 501
 #define ID_BUTTON_OPENFILE 502
+#define ID_EDIT_ML_RESULT 503
+#define ID_BUTTON_CALCHASH 504
