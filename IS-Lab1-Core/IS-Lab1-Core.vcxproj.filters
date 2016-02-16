@@ -21,12 +21,18 @@
     <ClCompile Include="hash_md5.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plot_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hash_md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ctrldefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plot_builder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
