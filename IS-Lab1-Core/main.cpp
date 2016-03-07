@@ -5,10 +5,11 @@
 #include <windowsx.h>
 #include <CommCtrl.h>
 #include <commdlg.h>
-#include <cstring>
 #include <thread>
+#include <string>
 
 #include "ctrldefines.h"
+#include "hash_md5.h"
 
 #pragma comment (lib, "comctl32")
 #pragma comment (linker, "\"/manifestdependency:type='win32' \
@@ -78,6 +79,8 @@ LRESULT CALLBACK WndProcFunc(
 	static WCHAR hashingFile[FILENAME_MAX + 1];
 	uint16_t uiLeftOffset = 5, uiTopOffset = 5, uiHeightJump = 35, 
 		uiHeight = 25, uiSpace = 5, uiBtnWidth = 0;
+	static crypto_hash::hash_md5 fm;
+	std::string md5;
 	switch (msg) 
 	{
 	case WM_CREATE:

@@ -22,9 +22,9 @@ namespace crypto_hash {
 		plot_builder(HWND);
 		~plot_builder();
 
-		void set_canvas(HWND);
-		void set_hSpace(uint16_t);
-		void set_vSpace(uint16_t);
+		//void set_canvas(HWND);
+		//void set_hSpace(uint16_t);
+		//void set_vSpace(uint16_t);
 		
 	};
 }
