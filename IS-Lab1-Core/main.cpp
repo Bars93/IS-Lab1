@@ -42,12 +42,12 @@ int WINAPI WinMain(
 	wcex.cbWndExtra = 0;
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
 
 	if (!RegisterClassEx(&wcex)) {
 		MessageBox(NULL, L"Ошибка в регистрации класса окна!", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
@@ -74,47 +74,56 @@ LRESULT CALLBACK WndProcFunc(
 	LPARAM lParam
 	)
 {
-	static HWND hWndEditFName, hWndBtnOFile, hWndBtnCalcHash, hWndEditMLResult,
-		hWndStaticFName, hWndStaticResult;
+	const static enum : uint16_t 
+	{ wndEditFName, wndBtnOFile, wndBtnCalcHash, wndEditMLResult, 
+		wndStaticFName, wndStaticResult, wndCtrlCount} wndLst;
+	static HWND wndCtrls[wndCtrlCount];
 	static WCHAR hashingFile[FILENAME_MAX + 1];
 	uint16_t uiLeftOffset = 5, uiTopOffset = 5, uiHeightJump = 35, 
 		uiHeight = 25, uiSpace = 5, uiBtnWidth = 0;
-	static crypto_hash::hash_md5 fm;
-	std::string md5;
+	crypto_hash::hash_md5 md_check;
 	switch (msg) 
 	{
 	case WM_CREATE:
 		RECT rct;
+
 		GetClientRect(hWnd, &rct);
+		memset(wndCtrls, 0, sizeof(HWND) * wndCtrlCount);
 		uiBtnWidth = static_cast<uint16_t>(rct.right / 4 - 10);
-		hWndEditFName = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL, 
+		wndCtrls[wndEditFName] = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL,
 			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_READONLY, 
-			uiLeftOffset, uiTopOffset, rct.right / 2, uiHeight, hWnd, (HMENU)ID_EDIT_FILENAME, 
-			(HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
-		if (hWndEditFName == 0) {
+			uiLeftOffset, uiTopOffset, rct.right / 2, uiHeight, hWnd, 
+			(HMENU)ID_EDIT_FILENAME, (HINSTANCE) 
+			GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
+		if (wndCtrls[wndEditFName] == 0) {
 			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
-		hWndEditMLResult = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL,
-			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL 
-			| ES_MULTILINE | ES_AUTOVSCROLL,
-			uiLeftOffset, uiTopOffset + uiHeightJump, rct.right - 10, uiHeight * 3, hWnd, (HMENU)ID_EDIT_ML_RESULT,
+		wndCtrls[wndEditMLResult] = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", NULL,
+			WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL | 
+			ES_MULTILINE | ES_AUTOVSCROLL,
+			uiLeftOffset, uiTopOffset + uiHeightJump, rct.right - 10, 
+			uiHeight * 3, hWnd, (HMENU)ID_EDIT_ML_RESULT,
 			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
-		if (hWndEditMLResult == 0) {
+		if (wndCtrls[wndEditMLResult] == 0) {
 			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
-		hWndBtnOFile = CreateWindowEx(0, L"BUTTON", L"Выбрать файл",
-			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, uiLeftOffset + rct.right / 2 + uiSpace, uiTopOffset, uiBtnWidth, uiHeight, hWnd,
-			(HMENU)ID_BUTTON_OPENFILE, (HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
-		if (hWndBtnOFile == 0) {
+		wndCtrls[wndBtnOFile] = CreateWindowEx(0, L"BUTTON", L"Выбрать файл",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, 
+			uiLeftOffset + rct.right / 2 + uiSpace, uiTopOffset, 
+			uiBtnWidth, uiHeight, hWnd, (HMENU)ID_BUTTON_OPENFILE, 
+			(HINSTANCE) GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
+		if (wndCtrls[wndBtnOFile] == 0) {
 			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
-		hWndBtnCalcHash = CreateWindowEx(0, L"BUTTON", L"Вычислить MD5",
-			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, uiLeftOffset + rct.right / 2 + 2 * uiSpace + uiBtnWidth, uiTopOffset, uiBtnWidth, uiHeight, hWnd,
-			(HMENU)ID_BUTTON_CALCHASH, (HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
-		if (hWndBtnCalcHash == 0) {
+		wndCtrls[wndBtnCalcHash] = CreateWindowEx(0, L"BUTTON", L"Вычислить MD5",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, 
+			uiLeftOffset + rct.right / 2 + 2 * uiSpace + uiBtnWidth, 
+			uiTopOffset, uiBtnWidth, uiHeight, hWnd, (HMENU)ID_BUTTON_CALCHASH,
+			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), NULL);
+		if (wndCtrls[wndBtnCalcHash] == 0) {
 			MessageBox(hWnd, L"Ошибка при создании элемента", L"IS Lab 1", MB_OK | MB_ICONEXCLAMATION);
 			PostQuitMessage(1);
 		}
@@ -124,18 +133,21 @@ LRESULT CALLBACK WndProcFunc(
 		{
 		case ID_BUTTON_OPENFILE: 
 			if (FOpenDialogExecute(hWnd, hashingFile)) {
-				SendMessage(hWndEditFName, WM_SETTEXT, 0, (LPARAM)L"");
-				int lastInd = GetWindowTextLength(hWndEditFName);
-				SetFocus(hWndEditFName);
+				SendMessage(wndCtrls[wndEditFName], WM_SETTEXT, 0, (LPARAM)L"");
+				int lastInd = GetWindowTextLength(wndCtrls[wndEditFName]);
+				SetFocus(wndCtrls[wndEditFName]);
 #ifdef WIN32
-				SendMessage(hWndEditFName, EM_SETSEL, (WPARAM)lastInd, (LPARAM)lastInd);
+				SendMessage(wndCtrls[wndEditFName], EM_SETSEL, (WPARAM)lastInd, 
+					(LPARAM)lastInd);
 #else
-				SendMessage(hWndEditFName, EM_SETSEL, 0, MAKELONG(lastInd, lastInd));
+				SendMessage(wndCtrls[wndEditFName], EM_SETSEL, 0, 
+					MAKELONG(lastInd, lastInd));
 #endif
-				SendMessage(hWndEditFName, EM_REPLACESEL, 0, (LPARAM)((LPWSTR) hashingFile));
+				SendMessage(wndCtrls[wndEditFName], EM_REPLACESEL, 0, 
+					(LPARAM)((LPWSTR) hashingFile));
 			}
 			else {
-				SendMessage(hWndEditFName, WM_SETTEXT, 0, (LPARAM) L"");
+				SendMessage(wndCtrls[wndEditFName], WM_SETTEXT, 0, (LPARAM) L"");
 			}
 			break;
 		case ID_BUTTON_CALCHASH:

@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <stdint.h>
 #include <vector>
-namespace crypto_hash {
+namespace winGDI {
 	class plot_builder
 	{
 		HWND canvas;

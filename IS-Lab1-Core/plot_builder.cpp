@@ -1,6 +1,6 @@
 #include "plot_builder.h"
 
-namespace crypto_hash {
+namespace winGDI {
 
 
 	plot_builder::plot_builder() :
